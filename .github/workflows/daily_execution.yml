@@ -1,1 +1,27 @@
+name: Daily Execution
 
+on:
+  schedule:
+    - cron: '45 20 * * *'
+
+jobs:
+  run_daily_task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: pip install pandas numpy boto3 schedule faker
+
+      - name: Convert notebook to script
+        run: jupyter nbconvert --to script Customer_data.ipynb
+
+      - name: Run daily task
+        run: python Customer_data.py
